@@ -1,37 +1,34 @@
-## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/Cazin42/Data-Products/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+---
+title: "Light vehicle charging infrastructure - Renault network (or a map created  with leaflet R package)" 
+author: "Olivier Cazin"
+date: "28 juin 2017"
+output:
+  html_document:
+    fig_caption: yes
+    keep_md: yes
+  pdf_document: default
+---
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/PRIVE - DOSSIERS/MOOC/MOOC - 9 - Developing Data Products - COURSERA")
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+In the context of Data Products Course Assignment 1 of Coursera, a map is created with leaflet R package from a list of GPS coordinates of charging stations for light electric vehicles accessible outside the concessions. These Open Data can be downloaded here : <https://www.data.gouv.fr/storage/f/2014-09-15T11-59-56/d-localdata-a186081-desktop-infra-recharge-reseau-renault-france.csv>
 
-### Jekyll Themes
+```{r,warning=FALSE}
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Cazin42/Data-Products/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+# packages loaded
+library(leaflet)
+library(utils)
 
-### Support or Contact
+# file downloaded and read (open data)
+data_lyon <- read.csv2("https://www.data.gouv.fr/storage/f/2014-09-15T11-59-56/d-localdata-a186081-desktop-infra-recharge-reseau-renault-france.csv")
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+# leaflet package used
+m <- leaflet(data=data_lyon) 
+m <- addTiles(m) 
+m <- addCircleMarkers(m,lng=~latitude_WSG84,lat=~longitude_WSG84,color = "black", weight = 1, stroke = T, fillColor = 'purple', fillOpacity = 0.5, radius =5,popup=~as.character(nom_station),label=~as.character(nom_station))
+m
+```
